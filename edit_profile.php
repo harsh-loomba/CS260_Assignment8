@@ -2,9 +2,18 @@
 
 session_start();
 
+//User not logged in : Redirect to index.php
 if (!isset($_SESSION['loggedin'])) {
     header('Location: index.html');
     exit;
+}
+
+//Displaying log message
+$log = '';
+
+if (isset($_SESSION['log_msg'])) {
+    $log = $_SESSION['log_msg'];
+    unset($_SESSION['log_msg']);
 }
 ?>
 
@@ -17,7 +26,22 @@ if (!isset($_SESSION['loggedin'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Login</title>
+    <title>Edit Profile</title>
+
+    <script>
+        // Javascript function to check frontend password matching
+        var check = function() {
+            if (document.getElementById('password').value ==
+                document.getElementById('confirm_pass').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = '';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'Password and Confirm Password fields are not matching!!!';
+            }
+        }
+    </script>
+
 </head>
 
 <body>
@@ -34,10 +58,15 @@ if (!isset($_SESSION['loggedin'])) {
             </svg>
         </div>
 
+        <!-- Update form -->
+
         <form method="post" action="update.php" name="Update">
 
             <h4>Update <span>PROFILE</span></h4>
             <p>Leave New Password field empty if you don't want to change your password.</p>
+
+            <!-- Printing log -->
+            <span style="color:red;"><?= $log ?></span>
 
             <div class="floating label">
                 <input placeholder="First Name" type="text" name="first_name" pattern="^[a-zA-Z][a-zA-Z\s]*$" title="Names cannot contain digits or special characters." value=<?= $_SESSION['first_name'] ?> required />
@@ -48,12 +77,14 @@ if (!isset($_SESSION['loggedin'])) {
             </div>
 
             <div class="floating label">
-                <input placeholder="New Password" type="password" name="new_pass" pattern=".{8,100}" title="Passwords should be 8 - 100 characters." />
+                <input placeholder="New Password" type="password" id="password" name="new_pass" pattern=".{8,100}" title="Passwords should be 8 - 100 characters." onkeyup='check();' />
             </div>
 
             <div class="floating label">
-                <input placeholder="Confirm New Password" type="password" name="confirm_pass" />
+                <input placeholder="Confirm New Password" type="password" id="confirm_pass" name="confirm_pass" onkeyup='check();' />
             </div>
+
+            <span id='message'></span>
 
             <div class="floating label">
                 <input placeholder="Old Password" type="password" name="password" pattern=".{8,100}" title="Passwords should be 8 - 100 characters." required />

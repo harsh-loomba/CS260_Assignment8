@@ -1,3 +1,27 @@
+<?php
+
+//starting session
+session_start();
+
+//if logged in, redirect to home page
+if (isset($_SESSION['loggedin'])) {
+    if ($_SESSION['loggedin'] == true) {
+        header('Location: home.php');
+    }
+    exit;
+}
+
+//display any error / log messages
+$log = '';
+
+if (isset($_SESSION['log_msg'])) {
+    $log = $_SESSION['log_msg'];
+
+    //Unsetting log_msg so that it does not repeat on a reload
+    unset($_SESSION['log_msg']);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +30,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Login</title>
+    <title>Register</title>
+
+    <script>
+        // Javascript function to check frontend password matching
+        var check = function() {
+            if (document.getElementById('password').value ==
+                document.getElementById('confirm_pass').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = '';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'Password and Confirm Password fields are not matching!!!';
+            }
+        }
+    </script>
+
 </head>
 
 <body>
@@ -23,9 +62,14 @@
             </svg>
         </div>
 
+        <!-- Register form -->
+
         <form method="post" action="validate_reg.php" name="Register" class="log-in">
 
             <h4>Register</h4>
+
+            <!-- Printing log message -->
+            <span style="color:red;"><?= $log ?></span>
 
             <div class="floating label">
                 <input placeholder="First Name" type="text" name="first_name" pattern="^[a-zA-Z][a-zA-Z\s]*$" title="Names cannot contain digits or special characters." required />
@@ -40,16 +84,18 @@
             </div>
 
             <div class="floating label">
-                <input placeholder="Password" type="password" name="password" pattern=".{8,100}" title="Passwords should be 8 - 100 characters." required />
+                <input placeholder="Password" type="password" id="password" name="password" pattern=".{8,100}" title="Passwords should be 8 - 100 characters." onkeyup='check();' required />
             </div>
 
             <div class="floating label">
-                <input placeholder="Confirm Password" type="password" name="confirm_pass" required />
+                <input placeholder="Confirm Password" type="password" id="confirm_pass" name="confirm_pass" onkeyup='check();' required />
             </div>
+
+            <span id='message'></span>
 
             <button type="submit" value="Login">Register</button>
 
-            <a href="index.php" class="discrete">Beck to login</a>
+            <a href="index.php" class="discrete">Back to login</a>
     </div>
 </body>
 

@@ -1,5 +1,6 @@
 <?php
 
+//function to connect to a database
 function getDB()
 {
     define('USER', 'root');
@@ -16,6 +17,7 @@ function getDB()
     return $conn;
 }
 
+//function to format input data to remove whitespace / slashes / special characters
 function convert_input($data)
 {
     $data = trim($data);
