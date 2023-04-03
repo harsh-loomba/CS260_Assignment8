@@ -1,12 +1,24 @@
 <?php
 
+//starting session
 session_start();
 
+//if logged in, redirect to home page
 if (isset($_SESSION['loggedin'])) {
     if ($_SESSION['loggedin'] == true) {
         header('Location: home.php');
     }
     exit;
+}
+
+//display any error / log messages
+$log = '';
+
+if (isset($_SESSION['log_msg'])) {
+    $log = $_SESSION['log_msg'];
+
+    //Unsetting log_msg so that it does not repeat on a reload
+    unset($_SESSION['log_msg']);
 }
 ?>
 
@@ -35,10 +47,16 @@ if (isset($_SESSION['loggedin'])) {
             </svg>
         </div>
 
+        <!-- Login form -->
+
         <form method="post" action="validate.php" name="Login" class="log-in">
 
             <h4>Log<span>IN</span></h4>
             <p>Login to your account!</p>
+
+            <!-- Printing log message -->
+
+            <span style="color:red;"><?= $log ?></span>
 
             <div class="floating label">
 
