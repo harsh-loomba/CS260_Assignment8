@@ -54,7 +54,7 @@ if (!isset($_SESSION['loggedin'])) {
             <button type="submit" value="Login">Edit Profile</button>
 
             <a href="home.php">Home</a>
-            <a href="logout.php">Logout</a>
+            <a href="logout.php" class="discrete">Logout</a>
         </form>
 
     </div>
