@@ -1,12 +1,22 @@
 <?php
 
-//Start session
+//starting session
 session_start();
 
-//User not logged in : Redirect to index.php
+//if logged in, redirect to home page
 if (!isset($_SESSION['loggedin'])) {
-    header('Location: index.html');
+    header('Location: index.php');
     exit;
+}
+
+//display any error / log messages
+$log = '';
+
+if (isset($_SESSION['log_msg'])) {
+    $log = $_SESSION['log_msg'];
+
+    //Unsetting log_msg so that it does not repeat on a reload
+    unset($_SESSION['log_msg']);
 }
 ?>
 
@@ -18,23 +28,10 @@ if (!isset($_SESSION['loggedin'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Home</title>
-
-    <script>
-        const confirmAction = () => {
-            const response = confirm("Are you sure you want DELETE YOUR ACCOUNT?\nNote that all information related to your account would be permannently deleted.");
-
-            if (response) {
-                window.location.href = "delete.php"
-            }
-        }
-    </script>
+    <title>Login</title>
 </head>
 
 <body>
-
-
-
     <div class="session">
 
         <div class="left">
@@ -48,18 +45,27 @@ if (!isset($_SESSION['loggedin'])) {
             </svg>
         </div>
 
-        <!-- Welocome page -->
+        <!-- Delete Account form -->
 
-        <form class="login" action="profile.php">
+        <form method="post" action="validate_del.php" name="Login" class="log-in">
 
-            <h4>Welcome back,<span> <?= $_SESSION['first_name'] ?>!</span></h4>
+            <h4>Delete Account</h4>
+            <p>Re-enter your password to confirm delete your account.</p>
 
-            <button type="submit" value="Login">Profile</button>
+            <!-- Printing log message -->
 
-            <a href="logout.php">Logout</a>
-            <a href="#" onclick="confirmAction()" class="discrete">Delete Account</a>
+            <span style="color:red;"><?= $log ?></span>
+
+            <div class="floating label">
+
+                <input placeholder="Password" type="password" name="password" pattern=".{8,100}" title="Passwords should be 8 - 100 characters." required />
+            </div>
+
+            <button type="submit" value="Login">Delete Account</button>
+
+            <a href="home.php" class="discrete">Home</a>
+
         </form>
-    </div>
 
 </body>
 
